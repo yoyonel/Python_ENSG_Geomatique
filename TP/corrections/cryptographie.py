@@ -1,4 +1,7 @@
 # -*- coding:utf8 -*-
+from operator import itemgetter
+import collections
+
 
 def table_vigenere():
     """
@@ -14,6 +17,15 @@ def table_vigenere():
     return t
 
 
+def table_vigenere_lc():
+    """
+    Méthode retournant une table de Vigenère.
+
+    >>> table_vigenere_lc() == table_vigenere()
+    True
+    """
+    return [[chr(97 + (i+j) % 26) for i in range(26)] for j in range(26)]
+
 
 def lettre_codee(lettre, lettre_cle, table_vigenere):
     """
@@ -25,7 +37,6 @@ def lettre_codee(lettre, lettre_cle, table_vigenere):
     return table_vigenere[num_cle][num_lettre]
 
 
-
 def lettre_decodee(lettre_codee, lettre_cle, table_vigenere):
     """
     Méthode décryptant une lettre à l'aide de la table de Vigenère et de la
@@ -34,7 +45,6 @@ def lettre_decodee(lettre_codee, lettre_cle, table_vigenere):
     num_cle = ord(lettre_cle) - 97
     num_lettre = table_vigenere[num_cle].index(lettre_codee) + 97
     return chr(num_lettre)
-
 
 
 def cryptage_vigenegre(message, cle, tab, mode):
@@ -62,7 +72,6 @@ def cryptage_vigenegre(message, cle, tab, mode):
     message_ok = ""
     i = 0  # compteur pour avancer dans la clé
     n = len(cle)
-
     for lettre in message:
         if 97 <= ord(lettre) <= 123:
             # il s'agit d'une lettre, on la code
@@ -83,6 +92,94 @@ def cryptage_vigenegre(message, cle, tab, mode):
     return message_ok
 
 
+def accumulate(iterator, element_neutre=0):
+    """
+    """
+    total = element_neutre
+    for item in iterator:
+        total += item
+        yield total
+
+
+def est_une_lettre(lettre):
+        """
+        """
+        return 97 <= ord(lettre) <= 123
+
+
+def cryptage_vigenegre_avec_lambdas(message, cle, tab, mode):
+    """
+    Pareil que 'cryptage_vigenegre' mais avec l'utilisation de lambda expression.
+
+    >>> message = "l'informatique c'est de la balle!"    
+    >>> cle = "ensg"
+    >>> tab = table_vigenere()
+    >>> cryptage_vigenegre(message, cle, tab, True) == cryptage_vigenegre_avec_lambdas(message, cle, tab, True)
+    True
+    """
+    message_ok = ""
+    i = 0  # compteur pour avancer dans la clé
+    n = len(cle)
+
+    list_func = [lambda args: (args[0], 0),
+                 lambda args: (lettre_decodee(*args), 1),
+                 lambda args: (lettre_codee(*args), 1)]
+
+    for lettre in message:
+        lettre_ok, incr_i = list_func[
+            est_une_lettre(lettre) * (1 + mode)]((lettre, cle[i], tab))
+        i = (i + incr_i) % n
+        # print lettre, lettre_ok, i
+        message_ok += lettre_ok
+
+    return message_ok
+
+
+def cryptage_vigenegre_avec_lc(message, cle, tab, mode):
+    """
+    Pareil que 'cryptage_vigenegre' mais avec l'utilisation de list comphreension.
+
+    Version plus dure à lire mais intéressante dans la construction et les mécanismes d'itérations mise en place.
+    
+    Le drawback de cette méthode est le double calcul des lettres "valides" dans le message,
+    1 fois pour le calcul des indices 'i' et sa progression, 
+    et une seconde fois pour choisir quelle méthode on utilise pour traiter une lettre dans le message.
+    
+    Il y aurait une possibilité d'éviter ce doublon, en fusionnant les listes des indices 'i' avec un décalage pour
+    comparer le current et le previous (une différence indiquerait qu'on est sur une lettre).
+    J'ai l'impression que le cout de cette alternative est plus important que le cout du test 'est_une_lettre'.
+    (ça serait à vérifier).
+
+    >>> message = "l'informatique c'est de la balle!"    
+    >>> cle = "ensg"
+    >>> tab = table_vigenere()
+    >>> cryptage_vigenegre(message, cle, tab, True) == cryptage_vigenegre_avec_lc(message, cle, tab, True)
+    True
+    """
+    list_func = [lambda args: args[0],
+                 lambda args: lettre_decodee(*args),
+                 lambda args: lettre_codee(*args)
+                 ]
+    n = len(cle)
+
+    return "".join(
+            map(
+                lambda i_lettre: list_func[est_une_lettre(i_lettre[1]) * (1 + mode)](
+                    (i_lettre[1], cle[i_lettre[0] % n], tab)
+                ),
+                zip(
+                    accumulate(
+                        [0] +
+                        map(
+                            lambda lettre: est_une_lettre(lettre),
+                            message
+                        )[1:]
+                    ),
+                    message
+                )
+        )
+    )
+
 
 def nettoyage_cle(cle):
     """
@@ -100,7 +197,7 @@ def nettoyage_cle(cle):
 
     :Example:
     >>> nettoyage_cle("ensg geomatique")
-    ensgomatiqu
+    'ensgomatiqu'
     """
     cle_ok = ""
     for lettre in cle:
@@ -108,6 +205,21 @@ def nettoyage_cle(cle):
             # c'est une lettre et elle n'est pas déjà dans la clé normalisée
             cle_ok += lettre
     return cle_ok
+
+
+def nettoyage_cle_avec_dictionnaire_ordonnee(cle):
+    """
+    Pareil que 'nettoyage_cle'
+
+    :Example:
+    >>> nettoyage_cle_avec_dictionnaire_ordonnee("ensg geomatique") == nettoyage_cle("ensg geomatique")
+    True
+    """
+    return "".join(
+        collections.OrderedDict.fromkeys(
+            filter(est_une_lettre, "ensg geomatique")
+            ).keys()
+        )
 
 
 def cryptage_substitution(message, cle, mode):
@@ -132,22 +244,24 @@ def cryptage_substitution(message, cle, mode):
     :returntype: string
 
     :Example:
-    >>> crypter("Message à crypter", "cle", True)
+    >>> print cryptage_substitution("Message à crypter", "cle", True)
     Mcssagc à lryptcr
     """
     # Préparation de la clé : on supprime les caractères en double
     cle_ok = nettoyage_cle(cle)
 
     # Cryptage
-    message_ok = "" # message crypté initialisé par une chaîne vide
+    message_ok = ""  # message crypté initialisé par une chaîne vide
     for lettre in message:
         if lettre in cle_ok:
             # On remplace la lettre par la suivante de la clé
-            pos = cle_ok.index(lettre) # indice de la lettre dans la clé
+            pos = cle_ok.index(lettre)  # indice de la lettre dans la clé
             if mode:
-                pos_ok = (pos + 1) % len(cle_ok) # indice de la lettre de remplacement dans la clé
+                # indice de la lettre de remplacement dans la clé
+                pos_ok = (pos + 1) % len(cle_ok)
             else:
-                pos_ok = (pos - 1) % len(cle_ok) # indice de la lettre de remplacement dans la clé
+                # indice de la lettre de remplacement dans la clé
+                pos_ok = (pos - 1) % len(cle_ok)
             lettre_ok = cle_ok[pos_ok]
 
         else:
@@ -156,7 +270,6 @@ def cryptage_substitution(message, cle, mode):
         message_ok += lettre_ok
 
     return message_ok
-
 
 
 def cryptage_cesar(message, decalage, mode):
@@ -180,7 +293,7 @@ def cryptage_cesar(message, decalage, mode):
 
     :Example:
     >>> cryptage_cesar("ensg", 5, True)
-    jsxl
+    'jsxl'
     """
     message_ok = ""
     for lettre in message:
@@ -208,7 +321,6 @@ def cryptage_cesar(message, decalage, mode):
     return message_ok
 
 
-
 def analyse_frequentielle(texte):
     dico = {}
     dico.clear()
@@ -225,12 +337,34 @@ def analyse_frequentielle(texte):
 
 
 def cassage_code(message_code, dico_freq):
-    lettres_frequentes = [cle for cle,valeur in dico.items() if valeur == max(dico.values())]
+    """
+    """
+    max_freq = max(dico_freq.values())
+    lettres_frequentes = [
+        cle for cle, valeur in dico_freq.items() if valeur == max_freq]
+    messages_ok = []
     for lettre in lettres_frequentes:
         decalage = ord(lettre) - ord('e')
         message_ok = cryptage_cesar(message_code, decalage, False)
-        print(message_ok)
+        # print(message_ok)
+        messages_ok.append(message_ok)
+    return messages_ok
 
+
+def cassage_code_avec_tri(message_code, dico_freq, nb_lettres_a_essayer=1):
+    """
+
+    >>> b = "r'otluxsgzowak i'kyz jk rg hgrrk. ut e lgoz jky zxaiy vxgzowaky sgoy lgaz goskx rky sgznksgzowaky."
+    >>> dico = analyse_frequentielle(b)
+    >>> cassage_code(b, dico) == cassage_code_avec_tri(b, dico, 2)
+    True
+    """
+    list_items_from_dico_freq = dico_freq.items()
+    list_items_from_dico_freq.sort(key=itemgetter(1), reverse=True)
+    return map(
+        lambda lettre: cryptage_cesar(message_code, ord(lettre) - ord('e'), False),
+        map(itemgetter(0), list_items_from_dico_freq)[0:nb_lettres_a_essayer]
+        )
 
 
 if __name__ == "__main__":
@@ -254,4 +388,4 @@ if __name__ == "__main__":
     c = "l'qsfmratiquen c'ngi dn lt btlln. ms y cmdn dng irecg prtiqueng atqg ftei tqanr lng atihéatiqueng."
     dico = analyse_frequentielle(b)
     print(dico)
-    cassage_code(b, dico)
+    print cassage_code(b, dico)
