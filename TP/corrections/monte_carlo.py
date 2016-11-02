@@ -45,14 +45,15 @@ def nb_dans_sous_domaine(n):
     nb = 0
     for i in range(n):
         x, y = tirer_point_alea()
-        if x**2 + y**2 <= 1:
+        if x ** 2 + y ** 2 <= 1:
             # Le point est dans le cercle
-            plt.plot(x, y, 'gx') # affichage du point en vert
-            nb += 1 # on incrémente le résultat
+            plt.plot(x, y, 'gx')  # affichage du point en vert
+            nb += 1  # on incrémente le résultat
         else:
             # Le point n'est pas dans le cercle
-            plt.plot(x, y, 'rx') # affichage du point en rouge
+            plt.plot(x, y, 'rx')  # affichage du point en rouge
     return nb
+
 
 def nb_dans_sous_domaine_avec_list_comphreensions(n):
     """
@@ -69,10 +70,10 @@ def nb_dans_sous_domaine_avec_list_comphreensions(n):
     """
     return len(
         filter(
-            lambda point: point[0]**2 + point[1]**2 <= 1.0,
+            lambda point: point[0] ** 2 + point[1] ** 2 <= 1.0,
             tirer_points_aleas(n)
-            )
         )
+    )
 
 
 def nb_dans_sous_domaine_avec_list_comphreensions_pour_graphique(n):
@@ -90,12 +91,12 @@ def nb_dans_sous_domaine_avec_list_comphreensions_pour_graphique(n):
     :rtype: integer
     """
     list_points_avec_flags = map(
-        lambda point: (point, int(point[0]**2 + point[1]**2 <= 1.0)),
+        lambda point: (point, int(point[0] ** 2 + point[1] ** 2 <= 1.0)),
         tirer_points_aleas(n)
     )
     return (sum(map(itemgetter(1), list_points_avec_flags)),
-    filter(lambda point_flag: point_flag[1], list_points_avec_flags),
-    filter(lambda point_flag: not point_flag[1], list_points_avec_flags))
+            filter(lambda point_flag: point_flag[1], list_points_avec_flags),
+            filter(lambda point_flag: not point_flag[1], list_points_avec_flags))
 
 
 def evaluation_pi(k):
@@ -103,9 +104,9 @@ def evaluation_pi(k):
     Fonction qui effectue plusieurs appriximation Pi par la méthode Monte Carlo
     """
     for i in range(1, k):
-        n = 10**i   # int
-        nb = nb_dans_sous_domaine(10**i)    # int
-        pi = nb / float(n) * 4   # convert to float
+        n = 10 ** i  # int
+        nb = nb_dans_sous_domaine(10 ** i)  # int
+        pi = nb / float(n) * 4  # convert to float
         print(pi)
 
 
@@ -116,7 +117,8 @@ def representation_graphique(n):
     """
     # Approximation de Pi par Monte Carlo avec 1000 points et affichage des points
     # nb = nb_dans_sous_domaine(n)
-    nb, list_points_dans_le_quart_de_cercle, list_points_en_dehors_du_quart_de_cercle = nb_dans_sous_domaine_avec_list_comphreensions_pour_graphique(n)
+    nb, list_points_dans_le_quart_de_cercle, list_points_en_dehors_du_quart_de_cercle = nb_dans_sous_domaine_avec_list_comphreensions_pour_graphique(
+        n)
     map(lambda point: plt.plot(point[0], point[1], 'gx'),
         map(itemgetter(0), list_points_dans_le_quart_de_cercle)
         )
@@ -128,7 +130,7 @@ def representation_graphique(n):
     plt.title(u"Tirage de {} points => Pi={}".format(n, pi))
 
     #
-    theta = np.linspace(0, 2*np.pi, 40)
+    theta = np.linspace(0, 2 * np.pi, 40)
     x = np.cos(theta)
     y = np.sin(theta)
     plt.plot(x, y, 'b-')
@@ -154,7 +156,8 @@ def representation_graphique_avec_list_comphreensions(n):
     """
     # Approximation de Pi par Monte Carlo avec 1000 points et affichage des points
     # nb = nb_dans_sous_domaine(n)
-    nb, list_points_dans_le_quart_de_cercle, list_points_en_dehors_du_quart_de_cercle = nb_dans_sous_domaine_avec_list_comphreensions_pour_graphique(n)
+    nb, list_points_dans_le_quart_de_cercle, list_points_en_dehors_du_quart_de_cercle = nb_dans_sous_domaine_avec_list_comphreensions_pour_graphique(
+        n)
 
     # Estimation de PI
     pi = nb / float(n) * 4
@@ -166,7 +169,7 @@ def representation_graphique_avec_list_comphreensions(n):
     ajouter_plots(list_points_en_dehors_du_quart_de_cercle, 'rx')
 
     #
-    theta = np.linspace(0, 2*np.pi, 40)
+    theta = np.linspace(0, 2 * np.pi, 40)
     x = np.cos(theta)
     y = np.sin(theta)
     plt.plot(x, y, 'b-')

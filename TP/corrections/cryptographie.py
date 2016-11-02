@@ -322,6 +322,11 @@ def cryptage_cesar(message, decalage, mode):
 
 
 def analyse_frequentielle(texte):
+    """
+
+    :param texte:
+    :return:
+    """
     dico = {}
     dico.clear()
     for lettre in texte:
@@ -338,6 +343,10 @@ def analyse_frequentielle(texte):
 
 def cassage_code(message_code, dico_freq):
     """
+
+    :param message_code:
+    :param dico_freq:
+    :return:
     """
     max_freq = max(dico_freq.values())
     lettres_frequentes = [
