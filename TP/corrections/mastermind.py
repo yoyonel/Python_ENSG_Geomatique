@@ -93,7 +93,8 @@ def verification_v2(sol, prop):
     nb_bien = sum((np.array(sol) - np.array(prop)) == 0)
 
     # Détection des couleurs mal placées
-    dict_gb_sol, dict_gb_prop = map(
+    nb_mal = 0
+    dicts_gp_sol_prop = map(
         lambda gb: defaultdict(int, {k: len(list(v)) for k, v in gb}),
         map(
             groupby,
@@ -108,12 +109,14 @@ def verification_v2(sol, prop):
             )
         )
     )
-    nb_mal = sum(
-        map(
-            lambda tup_gb_sol: min(tup_gb_sol[1], dict_gb_sol[tup_gb_sol[0]]),
-            dict_gb_prop.items()
+    if dicts_gp_sol_prop:
+        dict_gb_sol, dict_gb_prop = dicts_gp_sol_prop
+        nb_mal = sum(
+            map(
+                lambda tup_gb_sol: min(tup_gb_sol[1], dict_gb_sol[tup_gb_sol[0]]),
+                dict_gb_prop.items()
+            )
         )
-    )
 
     return nb_bien, nb_mal
 
