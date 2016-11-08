@@ -107,7 +107,9 @@ def process_with_pp(list_entries, use_mp_for_reduce=True):
 
     print("Collapse the lists of tuples into total term frequencies", file=sys.stderr)
     if use_mp_for_reduce:
-        term_frequencies_mp = pool.map(Reduce, token_to_tuples.items())
+        token_to_tuples_items = token_to_tuples.items()
+        term_frequencies_mp = pool.map(Reduce,token_to_tuples_items, chunksize=len(token_to_tuples_items)//8)
+        #print("term_frequencies_mp: %s" % term_frequencies_mp)
         list_results = term_frequencies_mp
     else:
         term_frequencies_sp = list(map(Reduce, token_to_tuples.items()))
@@ -130,11 +132,11 @@ if __name__ == '__main__':
 
     print("Load file, stuff it into a string", file=sys.stderr)
     # stars = load(sys.argv[1])
-    stars = np.random.randint(100, size=250000)
+    stars = np.random.randint(100, size=2500000)
 
     start_time = time.time()
 
-    term_frequencies = process_with_pp(stars, False)
+    term_frequencies = process_with_pp(stars, use_mp_for_reduce=True)
 
     print("--- %s seconds ---" % (time.time() - start_time))
 
