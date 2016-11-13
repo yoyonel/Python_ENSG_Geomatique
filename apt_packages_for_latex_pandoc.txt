@@ -1,0 +1,9 @@
+sudo apt-get install pdflatex
+sudo apt-get install texlive-latex-base
+sudo apt-get install texlive-fonts-recommended texlive-latex-recommended
+sudo apt-get install texlive-latex-extra
+sudo apt-get install texlive-lang-european
+sudo apt-get install texlive-lang-french 
+apt-file search xcolor.sty
+sudo apt-get install latex-xcolor
+
