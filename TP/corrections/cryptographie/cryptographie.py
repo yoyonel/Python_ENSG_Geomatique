@@ -155,29 +155,35 @@ def cryptage_vigenegre_avec_lc(message, cle, tab, mode):
     >>> tab = table_vigenere()
     >>> cryptage_vigenegre(message, cle, tab, True) == cryptage_vigenegre_avec_lc(message, cle, tab, True)
     True
+    >>> print(cryptage_vigenegre_avec_lc(message, cle, tab, True))
+    p'vflseegxviai p'wyx qw re osrpr!
     """
     list_func = [lambda args: args[0],
                  lambda args: lettre_decodee(*args),
                  lambda args: lettre_codee(*args)
                  ]
+    one_plus_mode = 1 + mode
+
+    def choose_func(lettre):
+        """
+
+        :param lettre:
+        :return:
+        """
+        return list_func[est_une_lettre(lettre) * one_plus_mode]
+
     n = len(cle)
 
     return "".join(
             map(
-                lambda i_lettre: list_func[est_une_lettre(i_lettre[1]) * (1 + mode)](
-                    (i_lettre[1], cle[i_lettre[0] % n], tab)
+                lambda incr_lettre: choose_func(incr_lettre[1])(
+                    (incr_lettre[1], cle[incr_lettre[0] % n], tab)
                 ),
                 zip(
-                    accumulate(
-                        [0] +
-                        map(
-                            lambda lettre: est_une_lettre(lettre),
-                            message
-                        )[1:]
-                    ),
+                    accumulate([0] + map(est_une_lettre, message)[1:]),
                     message
                 )
-        )
+            )
     )
 
 
