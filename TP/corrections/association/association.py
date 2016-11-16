@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 def ajoutActivite(nom, cotisation, nom_fichier):
     """
     Méthode pour ajouter une activité dans le fichier des activités.
@@ -14,7 +15,7 @@ def ajoutActivite(nom, cotisation, nom_fichier):
     else:
         try:
             with open(nom_fichier, 'a') as fichier:
-                ligne = "{}, {}\n".format(nom, cotisation) # ligne à écrire dans le fichier
+                ligne = "{}, {}\n".format(nom, cotisation)  # ligne à écrire dans le fichier
                 fichier.write(ligne)
             print("Activité {} ajoutée au fichier.".format(nom))
 
@@ -22,7 +23,6 @@ def ajoutActivite(nom, cotisation, nom_fichier):
             print("Le fichier {} n'existe pas".format(nom_fichier))
         except IOError:
             print("Erreur à l'ouverture du fichier {}".format(nom_fichier))
-
 
 
 def existeAct(nom_act, nom_fichier):
@@ -36,7 +36,7 @@ def existeAct(nom_act, nom_fichier):
     """
     try:
         with open(nom_fichier, 'r') as fichier:
-            txt = fichier.read() # contenu du fichier
+            txt = fichier.read()  # contenu du fichier
             if (nom_act in txt):
                 return True
             else:
@@ -48,7 +48,6 @@ def existeAct(nom_act, nom_fichier):
         print("Erreur à l'ouverture du fichier {}".format(nom_fichier))
 
 
-
 def lireTarifsActivites(nom_fichier):
     """
     Méthode pour lire les tarifs des activités.
@@ -58,7 +57,7 @@ def lireTarifsActivites(nom_fichier):
     dico = {}
     try:
         with open(nom_fichier, 'r') as fichier:
-            for ligne in fichier.readlines(): # lecture du fichier ligne par ligne
+            for ligne in fichier.readlines():  # lecture du fichier ligne par ligne
                 ligne_decoupee = ligne[:-1].split(', ')
                 dico[ligne_decoupee[0]] = int(ligne_decoupee[1])
 
@@ -90,6 +89,7 @@ def calculCotisation(dico_act, liste_act):
     """
     cotisation = 0
     liste_cotis = []
+    activite = None
 
     try:
         if len(liste_act) < 3:
@@ -107,17 +107,14 @@ def calculCotisation(dico_act, liste_act):
                 cotisation += liste_cotis[i]
             for i in range(2, len(liste_cotis)):
                 # Réduction de 10% pour les activités suivantes.
-                cotisation += liste_cotis[i] * 0.8
-
-
+                cotisation += liste_cotis[i] * 0.9
     except KeyError:
         print("La clé {} n'est pas présente dans le dictionnaire des activités/cotisations.".format(activite))
 
     return cotisation
 
 
-
-if __name__ =='__main__':
+if __name__ == '__main__':
     ajoutActivite("Theatre", 10, "activites.txt")
     ajoutActivite("Flute", 500, "activites.txt")
     ajoutActivite("Piano", 155, "activites.txt")
