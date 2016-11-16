@@ -24,7 +24,8 @@ Pour générer la documentation html avec sphinx :
 4. Editer le fichier docs/source/conf.py pour :
     * decommenter les lignes suivantes et ajouter le chemin erlatif vers votre projet
     * import os / import sys / sys.path.append(0, os.path.abspath('../..'))
-5. Exécuter la récupération automatique de la doc à partir des docstrings : shpinx-apidoc -f -o docs/source/ /
+5. Exécuter la récupération automatique de la doc à partir des docstrings : sphinx-apidoc -f -o docs/source/ /
 6. Générer la doc en html, depuis le répertoire docs : make html
 
+http://gisellezeno.com/tutorials/sphinx-for-python-documentation.html
 """
