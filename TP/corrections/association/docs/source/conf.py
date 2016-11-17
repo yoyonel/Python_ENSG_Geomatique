@@ -19,7 +19,9 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
+relativ_path = '../../..'
+sys.path.insert(0, os.path.abspath(relativ_path))
+print("Absolute path to source: {}".format(relativ_path))
 
 # -- General configuration ------------------------------------------------
 
