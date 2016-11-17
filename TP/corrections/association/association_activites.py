@@ -11,26 +11,33 @@ def construireLigneActivite(nom, cotisation, sep_col=', ', sep_ligne='\n'):
     """
 
     :param nom:
+    :type nom: str
     :param cotisation:
+    :type cotisation: float
     :param sep_col:
+    :type sep_col: str
     :param sep_ligne:
+    :type sep_ligne: str
     :return:
+    :rtype: str
 
-    :Exemple:
-    >>> construireLigneActivite("Natation", 100, ', ', '')
-    'Natation, 100'
+    :Example:
+        >>> construireLigneActivite("natation", 100, ', ', '')
+        'natation, 100'
+
     """
+
     return "{}{}{}{}".format(nom, sep_col, cotisation, sep_ligne)
 
 
 def ajoutActivite(nom, cotisation, nom_fichier, separateur=', '):
     """
-    Méthode pour ajouter une activité dans le fichier des activités.
 
-    Usage
-    -----
-    ajoutActivite(nom str, cotisation int, nomFichier str)
-
+    :param nom:
+    :param cotisation:
+    :param nom_fichier:
+    :param separateur:
+    :return:
     """
     # Q 1.3
     if existeAct(nom, nom_fichier):
@@ -57,6 +64,7 @@ def existeAct_with_fo(fichier, nom_act):
 
     :param fichier:
     :return:
+
     """
     # lecture du contenu du fichier
     txt = fichier.read()
@@ -70,9 +78,9 @@ def existeAct(nom_act, nom_fichier):
     """
     Méthode testant si une activité existe déjà dans un fichier
 
-    Usage
-    -----
-    existeAct(nomAct str, nomFichier str) -> boolean
+    :param nom_act:
+    :param nom_fichier:
+    :return:
 
     """
     try:
@@ -93,14 +101,18 @@ def retourne_colonnes_a_partir_de_ligne(ligne, sep_col=', ', sep_ligne='\n'):
     """
 
     :param ligne:
+    :type ligne: str
     :param sep_col:
+    :type sep_col: str
+    :param sep_ligne:
+    :type sep_ligne: str
     :return:
 
     :Example:
-    >>> retourne_colonnes_a_partir_de_ligne("Flute, 500")
-    ('Flute', 500.0)
-    >>> retourne_colonnes_a_partir_de_ligne("Piano, 155.0")
-    ('Piano', 155.0)
+        >>> retourne_colonnes_a_partir_de_ligne("Flute, 500")
+        ('Flute', 500.0)
+        >>> retourne_colonnes_a_partir_de_ligne("Piano, 155.0")
+        ('Piano', 155.0)
     """
     ligne_decoupee = ligne.split(sep_ligne)[0].split(sep_col)
     try:
@@ -128,6 +140,9 @@ def lireTarifsActivites(nom_fichier):
     Méthode pour lire les tarifs des activités.
     Cette méthode retourne un dictionnaire dont les clefs sont les noms des activités
     et les valeurs les tarifs correspondants.
+
+    :param nom_fichier:
+    :return:
     """
     log(log_nom_fichier, 'INFO', "lireTarifsActivites({})".format(nom_fichier))
     try:

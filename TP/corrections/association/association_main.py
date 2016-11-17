@@ -9,7 +9,8 @@ root = dirname(dirname(abspath(__file__)))
 sys.path.append(root)
 #
 from association.association_activites import ajoutActivite, lireTarifsActivites
-from association.association_adherent import ajoutAdherent, lireActivitesAdherent, suppression_adherent
+from association.association_adherent import ajoutAdherent, lireActivitesAdherent, \
+    suppression_adherent, changer_liste_activites_adherent
 from association.association_cotisation import calculCotisation
 from association.association_log import log
 
@@ -48,13 +49,18 @@ def association_adherents():
     ajoutAdherent('Alice', ['Danse', 'Theatre'], "adherents.txt")
     #
     liste_activites_pour_alice = lireActivitesAdherent('Alice', 'adherents.txt')
-    #
-    suppression_adherent('Bob', 'adherents.txt')
-    #
-    # print("Liste des activités d'Alice: {}".format(liste_activites_pour_alice))
     log(log_nom_fichier, 'INFO',
         "Liste des activités d'Alice: {}".format(liste_activites_pour_alice)
         )
+    #
+    suppression_adherent('Bob', 'adherents.txt')
+    #
+    changer_liste_activites_adherent('Alice', ['Piano', 'Flute'], 'adherents.txt')
+    liste_activites_pour_alice = lireActivitesAdherent('Alice', 'adherents.txt')
+    log(log_nom_fichier, 'INFO',
+        "Liste des activités d'Alice après maj: {}".format(liste_activites_pour_alice)
+        )
+    # print("Liste des activités d'Alice: {}".format(liste_activites_pour_alice))
 
 
 def association_cotisations(

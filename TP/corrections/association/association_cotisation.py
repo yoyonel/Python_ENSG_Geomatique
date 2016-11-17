@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from association.association_log import log
 
 log_nom_fichier = "association.log"
@@ -9,18 +10,19 @@ def calculCotisation(dico_act, liste_act):
     Calcul de la cotisation du par un adhérent
     en fonction des activités auxquelles il est inscrit.
 
-    Usage
-    -----
-    calculCotisation(dico_act dict, liste_act str[]) -> cotisation int
+    :param dico_act:
+    :type dico_act: dict
+    :param liste_act:
+    :type liste_act: list
+    :return:
+    :rtype: float
 
-    Tests
-    -----
-    >>> calculCotisation({'Flute': 50, 'Piano': 155, 'Theatre': 10}, ['Flute', 'Theatre'])
-    60
+    :Tests:
+        >>> calculCotisation({'Flute': 50, 'Piano': 155, 'Theatre': 10}, ['Flute', 'Theatre'])
+        60
 
-    >>> calculCotisation({'Piano': 155, 'Flute': 50, 'Danse': 200, 'Theatre': 10}, ['Danse', 'Theatre', 'Flute', 'Piano'])
-    379.5
-
+        >>> calculCotisation({'Piano': 155, 'Flute': 50, 'Danse': 200, 'Theatre': 10}, ['Danse', 'Theatre', 'Flute', 'Piano'])
+        379.5
     """
     cotisation = 0
     liste_cotis = []
@@ -61,8 +63,8 @@ def appliquerReduction(prix, reduction):
     :return:
 
     :Example:
-    >>> appliquerReduction(200, 10)
-    180.0
+        >>> appliquerReduction(200, 10)
+        180.0
     """
     return prix * (1.0 - reduction/100.0)
 
@@ -72,18 +74,19 @@ def calculCotisation_v2(dico_act, liste_act, reduction=10):
     Calcul de la cotisation du par un adhérent
     en fonction des activités auxquelles il est inscrit.
 
-    Usage
-    -----
-    calculCotisation_v2(dico_act dict, liste_act str[]) -> cotisation int
+    :param dico_act:
+    :type dico_act: dict
+    :param liste_act:
+    :type liste_act: list
+    :return:
+    :rtype: float
 
-    Tests
-    -----
-    >>> calculCotisation_v2({'Flute': 50, 'Piano': 155, 'Theatre': 10}, ['Flute', 'Theatre'])
-    60
+    :Tests:
+        >>> calculCotisation_v2({'Flute': 50, 'Piano': 155, 'Theatre': 10}, ['Flute', 'Theatre'])
+        60
 
-    >>> calculCotisation_v2({'Piano': 155, 'Flute': 50, 'Danse': 200, 'Theatre': 10}, ['Danse', 'Theatre', 'Flute', 'Piano'])
-    379.5
-
+        >>> calculCotisation_v2({'Piano': 155, 'Flute': 50, 'Danse': 200, 'Theatre': 10}, ['Danse', 'Theatre', 'Flute', 'Piano'])
+        379.5
     """
     # LOG
     log(log_nom_fichier, 'INFO',
