@@ -222,6 +222,9 @@ def suppression_adherent(nom_adherent, nom_fichier):
                     log(log_nom_fichier, 'INFO',
                         "Suppression de l'adherent {} du fichier {}".format(nom_adherent, nom_fichier))
                     adherent_trouve = True
+            # Synchronisation du fileobject python
+            # avec le fichier sur le disque
+            # (concretement: on reduit la taille du fichier (1 ligne en moins))
             fichier.truncate()
     except FileNotFoundError:
         log(log_nom_fichier, 'ERROR', "Le fichier {} n'existe pas".format(nom_fichier))
