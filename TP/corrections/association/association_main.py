@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
-# Python 3.x
-import sys
-# from pathlib import Path # if you haven't already done so
-# root = str(Path(__file__).resolve().parents[1])
-# Or
-from os.path import dirname, abspath
-root = dirname(dirname(abspath(__file__)))
-sys.path.append(root)
-#
-from association.association_activites import ajoutActivite, lireTarifsActivites
-from association.association_adherent import ajoutAdherent, lireActivitesAdherent, \
-    suppression_adherent, changer_liste_activites_adherent
-from association.association_cotisation import calculCotisation
-from association.association_log import log
+try:
+    from . association_activites import ajoutActivite, lireTarifsActivites
+    from . association_adherent import ajoutAdherent, lireActivitesAdherent, \
+        suppression_adherent, changer_liste_activites_adherent
+    from . association_cotisation import calculCotisation
+    from . association_log import log
+except:
+    # Python 3.x
+    import sys
+    # from pathlib import Path # if you haven't already done so
+    # root = str(Path(__file__).resolve().parents[1])
+    # Or
+    from os.path import dirname, abspath
+    root = dirname(dirname(abspath(__file__)))
+    sys.path.append(root)
+    #
+    from association.association_activites import ajoutActivite, lireTarifsActivites
+    from association.association_adherent import ajoutAdherent, lireActivitesAdherent, \
+        suppression_adherent, changer_liste_activites_adherent
+    from association.association_cotisation import calculCotisation
+    from association.association_log import log
 
 
 log_nom_fichier = "association.log"

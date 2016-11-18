@@ -1,2 +1,2 @@
-#!/usr/bin/bash
+#!/bin/bash
 nosetests --with-doctest -vv $1

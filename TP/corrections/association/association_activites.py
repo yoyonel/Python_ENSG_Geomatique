@@ -1,5 +1,17 @@
 # -*- coding: utf-8 -*-
-from association.association_log import log
+try:
+    from . association_log import log
+except:
+    import sys
+    # from pathlib import Path # if you haven't already done so
+    # root = str(Path(__file__).resolve().parents[1])
+    # Or
+    from os.path import dirname, abspath
+
+    root = dirname(dirname(abspath(__file__)))
+    sys.path.append(root)
+
+    from association.association_log import log
 
 log_nom_fichier = "association.log"
 
@@ -9,6 +21,7 @@ log_nom_fichier = "association.log"
 ######
 def construireLigneActivite(nom, cotisation, sep_col=', ', sep_ligne='\n'):
     """
+    Construit une ligne d'activité/cotisation
 
     :param nom:
     :type nom: str
@@ -26,7 +39,6 @@ def construireLigneActivite(nom, cotisation, sep_col=', ', sep_ligne='\n'):
         'natation, 100'
 
     """
-
     return "{}{}{}{}".format(nom, sep_col, cotisation, sep_ligne)
 
 
@@ -41,7 +53,7 @@ def ajoutActivite(nom, cotisation, nom_fichier, separateur=', '):
     """
     # Q 1.3
     if existeAct(nom, nom_fichier):
-        print("L'activité est déjà présente dans le fichier")
+        log('WARNING', "L'activité est déjà présente dans le fichier")
     else:
         try:
             with open(nom_fichier, 'a') as fichier:
@@ -49,12 +61,12 @@ def ajoutActivite(nom, cotisation, nom_fichier, separateur=', '):
                 ligne = construireLigneActivite(nom, cotisation, separateur)
                 # ecriture de la ligne
                 fichier.write(ligne)
-            print("Activité {} ajoutée au fichier.".format(nom))
+            log('INFO', "Activité {} ajoutée au fichier.".format(nom))
 
         except FileNotFoundError:
-            print("Le fichier {} n'existe pas".format(nom_fichier))
+            log('INFO', "Le fichier {} n'existe pas".format(nom_fichier))
         except IOError:
-            print("Erreur à l'ouverture du fichier {}".format(nom_fichier))
+            log('INFO', "Erreur à l'ouverture du fichier {}".format(nom_fichier))
 ######
 
 
@@ -97,7 +109,7 @@ def existeAct(nom_act, nom_fichier):
 
 
 # Q 1.4
-def retourne_colonnes_a_partir_de_ligne(ligne, sep_col=', ', sep_ligne='\n'):
+def extrait_activite_cotisation(ligne, sep_col=', ', sep_ligne='\n'):
     """
 
     :param ligne:
@@ -109,9 +121,9 @@ def retourne_colonnes_a_partir_de_ligne(ligne, sep_col=', ', sep_ligne='\n'):
     :return:
 
     :Example:
-        >>> retourne_colonnes_a_partir_de_ligne("Flute, 500")
+        >>> extrait_activite_cotisation("Flute, 500")
         ('Flute', 500.0)
-        >>> retourne_colonnes_a_partir_de_ligne("Piano, 155.0")
+        >>> extrait_activite_cotisation("Piano, 155.0")
         ('Piano', 155.0)
     """
     ligne_decoupee = ligne.split(sep_ligne)[0].split(sep_col)
@@ -130,7 +142,7 @@ def lireTarifsActivites_with_fo(fichier):
     """
     dico_activites_tarifs = {}
     for ligne in fichier.readlines():  # lecture du fichier ligne par ligne
-        key, value = retourne_colonnes_a_partir_de_ligne(ligne)
+        key, value = extrait_activite_cotisation(ligne)
         dico_activites_tarifs[key] = value
     return dico_activites_tarifs
 
