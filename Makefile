@@ -35,7 +35,9 @@ $(BUILD)/pdf/$(COURSENAME).pdf: Cours_Python.tex
 # html: $(BUILD)/html/$(PRESENTATION_PYTHON).html
 # $(BUILD)/html/$(PRESENTATION_PYTHON).html: $(PRESENTATION_PYTHON).md
 
-html: build/html/$(PRESENTATION_PYTHON).html build/html/$(PRESENTATION_PYTHON_OBJECT).html deploy_html
+html: build/html deploy_html
+
+build/html: build/html/$(PRESENTATION_PYTHON).html build/html/$(PRESENTATION_PYTHON_OBJECT).html
 
 build/html/$(PRESENTATION_PYTHON).html: $(PRESENTATION_PYTHON).md
 	# 
@@ -90,5 +92,8 @@ build/html/css:
 build/html/img:
 	@mkdir -p $(BUILD)/html
 	@ln -s $(realpath img) build/html/.
+
+run_html: build/html
+	firefox build/html/$(PRESENTATION_PYTHON).html build/html/$(PRESENTATION_PYTHON_OBJECT).html
 
 .PHONY: all book clean epub html pdf
