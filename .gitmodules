@@ -1,3 +1,6 @@
 [submodule "reveal.js"]
 	path = reveal.js
 	url = https://github.com/hakimel/reveal.js.git
+[submodule "docker-pandoc"]
+	path = docker-pandoc
+	url = https://github.com/yoyonel/docker-pandoc
